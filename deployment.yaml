@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hola-mundo-deployment
+spec:
+  replicas: 3  # Número de réplicas (puedes ajustar esto según tu necesidad)
+  selector:
+    matchLabels:
+      app: hola-mundo
+  template:
+    metadata:
+      labels:
+        app: hola-mundo
+    spec:
+      containers:
+      - name: hola-mundo-container
+        image: carloandrepb/docker01-andres-pillajo:latest  # Reemplaza con tu imagen en Docker Hub o un registro privado
+        ports:
+        - containerPort: 5000
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+ # name: hola-mundo-service
+#spec:
+ # selector:
+  #  app: hola-mundo
+  #ports:
+   # - protocol: TCP
+    #  port: 80  # El puerto donde se expondrá el servicio
+     # targetPort: 5000  # El puerto en el contenedor
+  #type: ClusterIP
