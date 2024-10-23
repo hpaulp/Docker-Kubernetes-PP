@@ -1,9 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: paul
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hola-mundo-deployment
+  namespace: paul
+  labels: 
+    app: hola-mundo
 spec:
-  replicas: 3  # Número de réplicas (puedes ajustar esto según tu necesidad)
+  replicas: 3  # Número de réplicas
   selector:
     matchLabels:
       app: hola-mundo
@@ -14,19 +22,22 @@ spec:
     spec:
       containers:
       - name: hola-mundo-container
-        image: carloandrepb/docker01-andres-pillajo:latest  # Reemplaza con tu imagen en Docker Hub o un registro privado
+        image: hpaulp/cursodocker:latest  # Imagen Docker
         ports:
-        - containerPort: 5000
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
- # name: hola-mundo-service
-#spec:
- # selector:
-  #  app: hola-mundo
-  #ports:
-   # - protocol: TCP
-    #  port: 80  # El puerto donde se expondrá el servicio
-     # targetPort: 5000  # El puerto en el contenedor
-  #type: ClusterIP
+        - containerPort: 5000  # Puerto expuesto dentro del contenedor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-mundo-service
+  namespace: paul
+  labels:
+    app: hola-mundo
+spec:
+  selector:
+    app: hola-mundo
+  ports:
+    - protocol: TCP
+      port: 5000          # Puerto externo
+      targetPort: 5000  # Puerto del contenedor que quieres exponer
+  type: ClusterIP  # Puedes cambiar a LoadBalancer si quieres exponerlo externamente

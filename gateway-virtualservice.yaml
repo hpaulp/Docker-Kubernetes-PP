@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: hola-mundo-gateway
+  namespace: paul
+spec:
+  selector:
+    istio: ingressgateway  # Usa el gateway de Istio
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: hola-mundo-vs
+  namespace: paul
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - hola-mundo-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: hola-mundo-service
+        port:
+          number: 5000
